@@ -1,99 +1,88 @@
 # Studio Skill Adapters
 
-> Turn one internal Studio workflow into two clean, reviewable local skills: one for Codex, one for Claude Code.
+把一套 Studio 研发流程，拆成两种本地可安装的 Skill：
 
-![Runtime](https://img.shields.io/badge/runtime-Codex%20%7C%20Claude%20Code-blue)
-![Scope](https://img.shields.io/badge/scope-project--local-brightgreen)
-![Secrets](https://img.shields.io/badge/secrets-not%20embedded-critical)
+- **Codex 版**：给 Codex / Codex Desktop 用，入口是 `AGENTS.md`。
+- **Claude Code 版**：给 Claude Code 用，入口是 `CLAUDE.md`。
 
-## When You Need This
+这个仓库不是完整研发框架，也不是自动部署系统。它只做一件事：把原来混在一起的 Studio workflow，整理成可审查、可复制、不会携带内部凭据的本地 skill 适配层。
 
-- You have a mature Studio workflow, but the original bundle mixes runtime state, hooks, sync URLs, and platform assumptions.
-- You want one workflow that can run in Codex through `AGENTS.md`, and in Claude Code through `CLAUDE.md`.
-- You need to publish or share the workflow without leaking internal repositories, local paths, tokens, or old session state.
+## 你什么时候用它
 
-## What This Repository Ships
+- 你已经有一套“聊需求 -> 写 PRD -> Agent 开发 -> 验证评审”的工作流。
+- 你希望同一套流程既能在 Codex 用，也能在 Claude Code 用。
+- 你不想整包复制旧 Studio bundle，因为里面可能混着 hooks、历史会话、内部仓库地址、同步配置或本地路径。
+- 你要把 skill 上传 GitHub，但不能泄露 token、内部 URL、cookie、私钥或旧 runtime 状态。
 
-| Adapter | Runtime | Entry File | What It Does |
-|---|---|---|---|
-| Codex Studio Adapter | Codex / Codex Desktop | `.codex/skills/autonomous-studio-codex/SKILL.md` | Routes discovery, PRD, planning, implementation, verification, review, and deploy handoff through Codex-safe project files. |
-| Claude Studio Adapter | Claude Code | `.claude/skills/autonomous-studio-claude/SKILL.md` | Keeps the same Studio workflow but targets `CLAUDE.md` and treats hooks as optional, reviewed additions. |
-| Showcase Notes | GitHub readers | `docs/luban-showcase.md` | Explains positioning, safety boundaries, and the release card used to judge publish readiness. |
-| Workflow Map | Teams adopting Studio | `docs/workflow.md` | Shows the intended demand-to-agent-development flow. |
-| Examples | New adopters | `examples/` | Provides sample status state and trigger prompts. |
+## 标准流程
 
-## Quick Start
+```text
+聊需求
+  -> 单独触发 PRD.html
+  -> 人工确认 PRD.html
+  -> 再写 PRD.json
+  -> 技术方案 / 验收拆分
+  -> Agent Skill 开发
+  -> 验证 / 评审 / 修复
+  -> 部署交接
+  -> 回流沉淀
+```
 
-Clone the repository, then copy only the adapter you need into your target project.
+关键边界：
+
+- `PRD.html` 是给人看的确认页，可以单独触发。
+- `PRD.json` 是给实现和 Agent 执行用的结构化合同。
+- 不会在生成 `PRD.html` 时顺手生成 `PRD.json`。
+- 只有人工确认 `PRD.html` 后，才进入 `PRD.json`。
+
+详细流程见 [docs/workflow.md](docs/workflow.md)。
+
+## 这里每个东西是干嘛的
+
+| 路径 | 用途 |
+|---|---|
+| `.codex/skills/autonomous-studio-codex/` | Codex 本地 skill。负责读取项目状态、路由到需求/PRD/开发/验证等阶段，并只向 `AGENTS.md` 注入短规则块。 |
+| `.claude/skills/autonomous-studio-claude/` | Claude Code 本地 skill。负责同一套 Studio 流程，但面向 `CLAUDE.md`；hooks 只作为可选项，不能默认安装。 |
+| `docs/workflow.md` | 端到端流程说明，重点写清 `PRD.html` 与 `PRD.json` 的先后关系。 |
+| `docs/luban-showcase.md` | 鲁班打磨记录：定位、评分、发布缺口和出师卡。它是评估文档，不是用户安装入口。 |
+| `examples/prompts.md` | 可以直接复制试用的触发语。 |
+| `examples/status.example.json` | Studio 状态文件样例。 |
+| `SECURITY.md` | 公开发布时的安全边界。 |
+| `ALIASES.md` | 推荐在长期文档里使用的 skill 别名。 |
+
+## 安装方式
+
+复制你需要的那一套到目标项目。
 
 ```bash
 git clone https://github.com/xunova739/studio-skill-adapters.git
 cd studio-skill-adapters
 
-# Codex project
+# 安装到 Codex 项目
 mkdir -p /path/to/project/.codex/skills
 cp -R .codex/skills/autonomous-studio-codex /path/to/project/.codex/skills/
 
-# Claude Code project
+# 安装到 Claude Code 项目
 mkdir -p /path/to/project/.claude/skills
 cp -R .claude/skills/autonomous-studio-claude /path/to/project/.claude/skills/
 ```
 
-Then restart or reload the target agent environment if its skill list is cached.
+如果 Codex 或 Claude Code 缓存了 skill 列表，复制后重载项目或重启客户端。
 
-## Trigger Examples
+## 触发方式
 
-Use natural language like:
+可以这样说：
 
 - `studio，帮我判断这个项目现在处于哪个阶段`
 - `开启本地 Studio，但不要装 Claude hooks`
-- `把旧 skill 里的内部仓库换成我们上传 GitHub 的仓库`
-- `从需求到上线，按 Studio 流程帮我推进`
-- `PRD 写完了，下一步进入技术方案和验证计划`
-- `检查一下这个 skill 有没有把 token 或内部 URL 带出去`
+- `单独生成 PRD.html，先不要写 PRD.json`
+- `PRD.html 已确认，现在写 PRD.json`
+- `从需求到上线，按 Studio 流程推进`
+- `检查这个 skill 有没有把 token 或内部 URL 带出去`
 
-## Visible Output
+## GitHub Mirror 配置
 
-The adapters are designed to produce visible, reviewable artifacts instead of hidden automation:
-
-```text
-User request
-  -> read planning/status.json or .planning/status.json
-  -> identify current stage and evidence
-  -> select the next workflow lane
-  -> write only a short AGENTS.md or CLAUDE.md marker block when requested
-  -> preserve human approval points for high-impact decisions
-```
-
-For AI-assisted recruiting, screening, ranking, or candidate analysis workflows, the default posture is:
-
-```text
-AI assists. Humans decide.
-```
-
-Every AI recommendation should expose evidence, score/reason, and a human override path.
-
-## End-to-End Flow
-
-The intended Studio flow is:
-
-```text
-Talk through the demand
-  -> write PRD.html
-  -> human confirms the PRD.html
-  -> write PRD.json only after confirmation
-  -> split technical plan and acceptance checks
-  -> develop through the appropriate agent skill
-  -> verify, review, and fix
-  -> deploy or hand off
-  -> feed decisions and lessons back into the next cycle
-```
-
-See [docs/workflow.md](docs/workflow.md) for the detailed stage map.
-
-## GitHub Mirror Configuration
-
-Replace any old internal `target_repo` or sync block with a credential-free GitHub mirror reference:
+旧 skill 里如果有内部 `target_repo` 或 sync block，公开发布时替换成无凭据的 GitHub mirror：
 
 ```yaml
 studio_source:
@@ -103,67 +92,24 @@ studio_source:
   credential_rule: "Do not embed credentials in skill files."
 ```
 
-Authentication belongs in GitHub CLI, SSH keys, or the system credential helper. Do not store tokens, cookies, private keys, passwords, or auth tickets in skill files.
+认证交给 `gh auth`、SSH key 或系统 credential helper。不要把 token、cookie、密码、私钥、authTicket 写进 skill 文件。
 
-## Why This Is Different
+## 安全边界
 
-| Common Problem | This Repository's Choice |
-|---|---|
-| One giant bundle is copied into every runtime. | Two thin adapters keep Codex and Claude Code concerns separate. |
-| Hooks run before anyone understands them. | Hooks are optional and require explicit review in the Claude adapter. |
-| Internal sync URLs leak into public docs. | GitHub mirror configuration is credential-free and placeholder-based. |
-| Root context files become long manuals. | `AGENTS.md` and `CLAUDE.md` receive only short marker-bounded routing blocks. |
-| AI automation becomes a black box. | Every high-impact AI decision needs evidence, reason, and human override. |
+这两套 adapter 默认不会：
 
-## Safety Boundaries
+- 自动安装 Claude hooks；
+- 复制旧 sessions、decision logs、checkpoints、memory dump；
+- 在仓库 URL 里嵌入凭据；
+- 未经项目规则或用户明确要求就 push / deploy；
+- 对招聘筛选、候选人排序等高影响场景做黑盒决策。
 
-These adapters do not:
+AI 的定位是辅助，不是替人拍板。涉及候选人筛选、业务线配置、岗位匹配时，应保留依据、评分原因、人工复核和 override。
 
-- install Claude hooks automatically;
-- copy old sessions, decision logs, checkpoints, or memory dumps;
-- embed credentials in repository URLs;
-- push code or deploy without the current project policy or explicit user instruction;
-- make black-box decisions for candidate screening or other high-impact workflows.
+## 发布前验证
 
-See [SECURITY.md](SECURITY.md) for the public safety contract.
+当前发布前已检查：
 
-## File Structure
-
-```text
-.
-├── .codex/skills/autonomous-studio-codex/
-│   ├── SKILL.md
-│   └── evals/evals.json
-├── .claude/skills/autonomous-studio-claude/
-│   ├── SKILL.md
-│   └── evals/evals.json
-├── docs/luban-showcase.md
-├── docs/workflow.md
-├── examples/prompts.md
-├── examples/status.example.json
-├── ALIASES.md
-├── SECURITY.md
-└── README.md
-```
-
-## Validation
-
-Current release checks:
-
-- `jq` parsed both eval files.
-- Secret scan found no internal repository domains, credential-shaped URLs, hardcoded key names, or common API-key patterns.
-- The public README avoids local machine paths and internal source URLs.
-
-## Release Card
-
-```text
-┌─────────────────────────────────────┐
-│  Luban Release Card                 │
-│                                     │
-│  Work: Studio Skill Adapters        │
-│  Position: two safe local adapters  │
-│  Best move: split by runtime        │
-│  Safety: no credentials embedded    │
-│  Next: replace <org>/<repo> mirror  │
-└─────────────────────────────────────┘
-```
+- `jq` 可以解析两个 eval 文件和示例状态 JSON。
+- 扫描未发现本地机器路径、内部域名、带凭据 URL 或常见密钥形态。
+- README 首页不再放“出师证书”；鲁班打磨结果放在 [docs/luban-showcase.md](docs/luban-showcase.md)。
