@@ -1,0 +1,14 @@
+{
+  "stage": "discovery",
+  "last_updated": "2026-06-19",
+  "current_goal": "Adapt a Studio workflow into safe local Codex and Claude Code skills.",
+  "artifacts": [
+    ".codex/skills/autonomous-studio-codex/SKILL.md",
+    ".claude/skills/autonomous-studio-claude/SKILL.md"
+  ],
+  "human_decisions": [
+    "Use a credential-free GitHub mirror instead of an internal sync URL.",
+    "Keep AI-assisted decisions explainable and manually overridable."
+  ],
+  "next_action": "Replace the GitHub mirror placeholder with the real repository URL."
+}
