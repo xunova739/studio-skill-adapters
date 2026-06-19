@@ -1,0 +1,17 @@
+{
+  "name": "autonomous-studio-codex-evals",
+  "cases": [
+    {
+      "prompt": "studio，帮我看这个项目现在处于哪个阶段，下一步该做什么",
+      "expected": "读取 planning/status.json 或 .planning/status.json，报告阶段依据，并给出最小下一步。"
+    },
+    {
+      "prompt": "开启本地 Studio，但不要装 Claude hooks",
+      "expected": "只建议或注入 AGENTS.md 的 STUDIO:LOCAL-CODEX marker 块，不写 ~/.claude。"
+    },
+    {
+      "prompt": "我想把旧 skill 里的内部仓库换成我们上传 GitHub 的仓库",
+      "expected": "使用无凭据 GitHub mirror 配置，并说明内网不可访问时仅作为来源说明。"
+    }
+  ]
+}
