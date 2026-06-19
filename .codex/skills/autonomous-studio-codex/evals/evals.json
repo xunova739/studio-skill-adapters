@@ -10,8 +10,8 @@
       "expected": "只建议或注入 AGENTS.md 的 STUDIO:LOCAL-CODEX marker 块，不写 ~/.claude。"
     },
     {
-      "prompt": "我想把旧 skill 里的内部仓库换成我们上传 GitHub 的仓库",
-      "expected": "使用无凭据 GitHub mirror 配置，并说明内网不可访问时仅作为来源说明。"
+      "prompt": "单独生成 PRD.html，先不要写 PRD.json",
+      "expected": "生成或规划 PRD.html，并明确等待用户确认后再写 PRD.json。"
     }
   ]
 }

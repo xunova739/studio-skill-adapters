@@ -2,9 +2,9 @@
 
 ## 1. Material Check
 
-Challenge 1 - Real problem: valid. Teams often need one internal workflow to work across multiple agent runtimes without copying unsafe runtime state.
+Challenge 1 - Real problem: valid. Teams often need one workflow to work across multiple agent runtimes without copying unsafe runtime state.
 
-Challenge 2 - Unique angle: the value is not a brand-new automation engine. The value is a safe adapter split: Codex gets `AGENTS.md`; Claude Code gets `CLAUDE.md`; old hooks and sync URLs are not copied blindly.
+Challenge 2 - Unique angle: the value is not a brand-new automation engine. The value is a safe runtime split: Codex gets `AGENTS.md`; Claude Code gets `CLAUDE.md`; hooks remain optional and reviewed.
 
 Challenge 3 - Installation reason: users install this when they already have a Studio workflow and need a clean, shareable bridge.
 
@@ -26,16 +26,16 @@ This release pass used a light ecosystem scan to shape public positioning:
 
 ## 3. Positioning
 
-Old positioning:
+Unclear positioning:
 
 ```text
-Autonomous Studio bundle with hooks, state, sync, and runtime assumptions.
+Studio workflow notes plus runtime-specific context files.
 ```
 
-New positioning:
+Current positioning:
 
 ```text
-Two safe local adapters for carrying one Studio workflow across Codex and Claude Code.
+One actual Studio skill with Codex and Claude Code install forms.
 ```
 
 The repository should compete on safety, clarity, and installation confidence, not on promising full autonomous delivery.
@@ -59,8 +59,8 @@ The repository should compete on safety, clarity, and installation confidence, n
 
 P0:
 
-- Replace `https://github.com/<org>/<repo>.git` with the real mirror repository when known.
-- Keep the repository private until the owner decides whether internal workflow names are public-safe.
+- Confirm both runtime-specific skill forms load correctly in their target tools.
+- Decide whether to add a short GIF or screenshot demo.
 
 P1:
 
@@ -79,9 +79,9 @@ P2:
 │                                     │
 │  作品：Studio Skill Adapters        │
 │  过尺：45 分 → 73 分（预估）        │
-│  定位：一套 Studio，两种安全适配    │
-│  绝活：Codex/Claude 分面，不带凭据  │
-│  下一步：替换真实 GitHub mirror     │
+│  定位：一个 Studio Skill，两种安装形态 │
+│  绝活：PRD.html 确认后才写 PRD.json  │
+│  下一步：补一段真实运行 demo          │
 │                                     │
 │  验收师傅：鲁班                     │
 └─────────────────────────────────────┘

@@ -1,0 +1,20 @@
+{
+  "skill_name": "autonomous-studio",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "studio, tell me what stage this project is in and what the next step should be",
+      "expected_output": "Reads or infers project status, reports evidence, and suggests the smallest next action."
+    },
+    {
+      "id": 2,
+      "prompt": "Generate PRD.html only. Do not write PRD.json yet.",
+      "expected_output": "Creates or plans the human-readable PRD.html and explicitly waits for confirmation before PRD.json."
+    },
+    {
+      "id": 3,
+      "prompt": "The PRD.html is approved. Now write PRD.json and prepare agent development tasks.",
+      "expected_output": "Converts the confirmed PRD.html into structured PRD.json and prepares implementation-facing tasks."
+    }
+  ]
+}

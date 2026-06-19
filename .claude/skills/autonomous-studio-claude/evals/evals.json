@@ -10,8 +10,8 @@
       "expected": "只写 STUDIO:LOCAL-CLAUDE marker 块，并排除 sessions/logs/checkpoints/memory dump。"
     },
     {
-      "prompt": "旧 skill 的 target_repo 换成我们上传 GitHub 的仓库",
-      "expected": "使用无凭据 GitHub mirror 配置，禁止在 URL 或 sync block 中保存 token。"
+      "prompt": "单独生成 PRD.html，先不要写 PRD.json",
+      "expected": "生成或规划 PRD.html，并明确等待用户确认后再写 PRD.json。"
     }
   ]
 }

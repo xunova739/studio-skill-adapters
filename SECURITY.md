@@ -6,7 +6,7 @@ This repository is designed for project-local agent skills. Treat every copied s
 
 - API keys, tokens, cookies, auth tickets, passwords, SSH private keys, or `.env` contents
 - Credential-bearing Git URLs
-- Internal source repository URLs that should not be public
+- Private repository URLs that should not be public
 - Local machine paths from a contributor's workstation
 - Old agent sessions, decision logs, checkpoints, memory dumps, or runtime state
 

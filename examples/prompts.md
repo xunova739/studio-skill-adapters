@@ -35,11 +35,11 @@ Expected behavior:
 - use `CLAUDE.md` as the local routing file.
 
 ```text
-旧 skill 的 target_repo 换成我们上传 GitHub 的仓库
+Check whether this skill is safe to publish.
 ```
 
 Expected behavior:
 
-- use a credential-free GitHub mirror URL;
-- never place tokens, cookies, passwords, or private keys in skill files;
-- treat GitHub as source reference when the runtime environment is offline.
+- check that skill metadata does not contain credentials;
+- check that no sessions, decision logs, checkpoints, or memory dumps are bundled;
+- confirm that `PRD.html` and `PRD.json` are separate stages.
