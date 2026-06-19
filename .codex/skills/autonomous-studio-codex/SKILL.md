@@ -50,7 +50,7 @@ This is the Codex install form of Autonomous Studio. It runs the Studio workflow
 - `implementation`: 由 Codex 直接执行；需要多 lane 时使用 native subagents。不要依赖 Claude Code Agent。
 - `verification`: 运行项目已有测试、类型检查、lint、Playwright 或人工验证清单。
 - `review`: 用代码审查姿态输出问题、风险、缺测试点；必要时再修。
-- `deploy`: 只在项目已有部署权限和流程时调用 `prod-deploy` 或交付部署清单。
+- `deploy`: 只在项目已有部署权限和流程时执行；否则交付部署清单或交给项目自己的部署流程。
 
 ## 状态文件建议
 

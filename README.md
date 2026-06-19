@@ -7,6 +7,7 @@ This repository contains the actual skill, not just documentation:
 - `SKILL.md` is the canonical Studio skill.
 - `.codex/skills/autonomous-studio-codex/` is the Codex install form.
 - `.claude/skills/autonomous-studio-claude/` is the Claude Code install form.
+- `skills/` contains generic companion skills used by the Studio workflow.
 
 No repository URL is required inside the skill frontmatter. The GitHub repository itself is the distribution source.
 
@@ -87,11 +88,36 @@ Chinese prompts are also supported:
 | `references/studio-pipeline.md` | Detailed stage rules loaded only when needed. |
 | `.codex/skills/autonomous-studio-codex/` | Codex-specific install form using `AGENTS.md`. |
 | `.claude/skills/autonomous-studio-claude/` | Claude Code-specific install form using `CLAUDE.md`; hooks are optional and reviewed. |
+| `skills/demand-discovery/` | Requirement discovery helper. |
+| `skills/idea-exploration/` | Early-stage idea and feasibility exploration. |
+| `skills/pm-spec/` | PRD authoring helper. |
+| `skills/serial-agent-handoff/` | Agent development handoff helper. |
+| `skills/agents-map/` | Multi-project agent context mapping helper. |
+| `skills/agent-context-authoring/` | AGENTS.md / CLAUDE.md authoring helper. |
+| `skills/agents-md-slim/` | AGENTS.md slimming helper. |
+| `skills/excalidraw-diagram-skill/` | Editable Excalidraw diagram helper. |
+| `skills/luban/` | Skill refinement helper. |
 | `docs/workflow.md` | Human-readable workflow explanation. |
 | `examples/prompts.md` | Example trigger prompts. |
 | `examples/status.example.json` | Example status file. |
 | `evals/evals.json` | Root skill eval prompts. |
 | `SECURITY.md` | Public safety boundary. |
+
+## Public Bundle Boundary
+
+This public bundle intentionally excludes internal platform adapters, deployment tools, company memory stores, private registries, and organization-specific workflow scripts. Those are not required for the Studio core workflow.
+
+The Studio core depends on the workflow contract, not on a specific company platform:
+
+```text
+demand discovery
+  -> PRD.html review
+  -> human approval
+  -> PRD.json
+  -> implementation plan
+  -> agent development
+  -> verification
+```
 
 ## Safety Boundary
 
