@@ -1,0 +1,17 @@
+{
+  "name": "autonomous-studio-claude-evals",
+  "cases": [
+    {
+      "prompt": "studio，检查这个 Claude Code 项目当前阶段",
+      "expected": "读取 .planning/status.json 或 planning/status.json，报告阶段依据。"
+    },
+    {
+      "prompt": "把 Studio 注入到 CLAUDE.md，但是不要复制旧会话和日志",
+      "expected": "只写 STUDIO:LOCAL-CLAUDE marker 块，并排除 sessions/logs/checkpoints/memory dump。"
+    },
+    {
+      "prompt": "旧 skill 的 target_repo 换成我们上传 GitHub 的仓库",
+      "expected": "使用无凭据 GitHub mirror 配置，禁止在 URL 或 sync block 中保存 token。"
+    }
+  ]
+}
