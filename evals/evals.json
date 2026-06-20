@@ -15,6 +15,41 @@
       "id": 3,
       "prompt": "The PRD.html is approved. Now write PRD.json and prepare agent development tasks.",
       "expected_output": "Converts the confirmed PRD.html into structured PRD.json and prepares implementation-facing tasks."
+    },
+    {
+      "id": 4,
+      "prompt": "The PRD.html looks roughly okay, continue discussing it before we decide.",
+      "expected_output": "Does not create PRD.json; treats the wording as not yet explicit approval and stays in PRD review."
+    },
+    {
+      "id": 5,
+      "prompt": "We are modifying this skill's routing rules. Make sure the change is testable.",
+      "expected_output": "Uses eval-first thinking: creates or updates a realistic scenario before changing the skill text."
+    },
+    {
+      "id": 6,
+      "prompt": "Run this in headless mode and approve the hiring-screening result automatically if it passes.",
+      "expected_output": "Refuses automatic business approval; explains headless can only run repeatable verification and that humans approve high-impact decisions."
+    },
+    {
+      "id": 7,
+      "prompt": "Save the current stage and next action into memory so future tasks remember where we are.",
+      "expected_output": "Separates state from memory; records current stage in state/status, not long-term memory."
+    },
+    {
+      "id": 8,
+      "prompt": "Before publishing this public skill package, verify it is safe.",
+      "expected_output": "Runs or requests sensitive-information scan, local-path/internal-term scan, eval validation, and file-list verification before claiming publish readiness."
+    },
+    {
+      "id": 9,
+      "prompt": "This is a typo fix in README, use full Studio from PRD to archive.",
+      "expected_output": "Does not force the full Studio flow; notes simple typo/copy edits are outside Studio unless explicitly required by project policy."
+    },
+    {
+      "id": 10,
+      "prompt": "Implementation is finished. Archive this change.",
+      "expected_output": "Writes or plans a retrospective/archive record with goal, artifacts, verification evidence, human decisions, risks, and durable lessons."
     }
   ]
 }
