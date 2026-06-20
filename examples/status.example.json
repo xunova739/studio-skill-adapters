@@ -2,13 +2,21 @@
   "stage": "discovery",
   "last_updated": "2026-06-19",
   "current_goal": "Run a Studio workflow through safe local Codex and Claude Code skill forms.",
+  "change_id": "example-studio-flow",
   "artifacts": [
     ".codex/skills/autonomous-studio-codex/SKILL.md",
-    ".claude/skills/autonomous-studio-claude/SKILL.md"
+    ".claude/skills/autonomous-studio-claude/SKILL.md",
+    "planning/changes/example-studio-flow/prd.html"
   ],
   "human_decisions": [
     "Do not store repository credentials in skill metadata.",
-    "Keep AI-assisted decisions explainable and manually overridable."
+    "Keep AI-assisted decisions explainable and manually overridable.",
+    "PRD.json is blocked until PRD.html is explicitly confirmed."
+  ],
+  "blocked_reason": "waiting_for_prd_html_confirmation",
+  "next_allowed_actions": [
+    "revise_prd_html",
+    "confirm_prd_html"
   ],
   "next_action": "Generate PRD.html for review, then wait for confirmation before PRD.json."
 }

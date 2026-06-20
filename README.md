@@ -21,11 +21,11 @@ demand discovery
   -> human confirmation
   -> PRD.json structuring
   -> technical planning
-  -> agent-skill development
+  -> implementation or skill/eval development
   -> verification
   -> review and fix
   -> deploy or handoff
-  -> feedback loop
+  -> archive and feedback loop
 ```
 
 The important boundary is:
@@ -37,6 +37,13 @@ PRD.html first
 ```
 
 `PRD.html` is a separately triggered review artifact. The skill should not generate `PRD.json` at the same time. `PRD.json` is created only after the user confirms the HTML PRD.
+
+The package also encodes four workflow boundaries:
+
+- **OpenSpec-style change archive:** keep `prd.html`, `prd.json`, `design.md`, `tasks.md`, `verify.md`, and `retrospective.md` together per demand.
+- **Superpowers-style execution discipline:** use TDD for code behavior and eval-first for skills, prompts, and workflow rules.
+- **Headless as verification only:** run repeatable checks without letting automation approve business intent, publishing, hiring decisions, or irreversible actions.
+- **State is not memory:** state files track the current stage; memory stores stable reusable rules; archives store delivery evidence.
 
 ## Install
 
@@ -103,6 +110,21 @@ Chinese prompts are also supported:
 | `evals/evals.json` | Root skill eval prompts. |
 | `SECURITY.md` | Public safety boundary. |
 
+## Stage Routing
+
+| Stage | Main Skill / Layer | Main Rule |
+|---|---|---|
+| demand discovery | `demand-discovery`, `idea-exploration` | clarify before PRD |
+| PRD.html | `pm-spec` | create HTML only |
+| PRD confirmation | human gate | no JSON until explicit approval |
+| PRD.json | `pm-spec` + guardrail | structure confirmed PRD |
+| technical plan | planning/subagents | define files, tests, rollback |
+| implementation | Codex, Claude Code, `serial-agent-handoff` | Studio routes; executor implements |
+| verification | command/headless + skill judgment | prove with evidence |
+| review | review skill/subagent | fix or explicitly defer P0/P1 risk |
+| deploy/handoff | project deploy flow or handoff | no internal deployment binding |
+| archive | retrospective | evidence and durable lessons |
+
 ## Public Bundle Boundary
 
 This public bundle intentionally excludes internal platform adapters, deployment tools, company memory stores, private registries, and organization-specific workflow scripts. Those are not required for the Studio core workflow.
@@ -117,6 +139,7 @@ demand discovery
   -> implementation plan
   -> agent development
   -> verification
+  -> archive
 ```
 
 ## Safety Boundary
@@ -128,6 +151,9 @@ The skill does not:
 - copy sessions, decision logs, checkpoints, or memory dumps;
 - push code, deploy, or call external services without the active project policy or explicit user instruction;
 - make black-box decisions for recruiting, screening, ranking, or other high-impact workflows.
+- treat headless checks as business approval;
+- write state-machine progress into long-term memory;
+- bind public workflows to an internal deployment skill.
 
 For multi-business-line systems, prefer reusable configuration over one prompt per job:
 
@@ -147,3 +173,4 @@ Before publishing:
 - JSON eval files were parsed with `jq`.
 - The repository was scanned for local machine paths, internal domains, credential-shaped URLs, and common key patterns.
 - `PRD.html -> confirmation -> PRD.json` is documented in both `SKILL.md` and `docs/workflow.md`.
+- Stage routing, TDD/eval-first, headless verification, state/memory/archive, and change archive rules are covered by eval prompts.
