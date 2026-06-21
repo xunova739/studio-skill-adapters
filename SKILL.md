@@ -197,6 +197,17 @@ Headless mode is for repeatable verification only:
 
 Headless mode must not approve business intent, hiring decisions, publishing decisions, or irreversible operations.
 
+## Decision Agent Prompt
+
+For advanced Studio setups, `decision-agent-prompt.md` provides an isolated decision-subagent prompt. Use it only when the project needs a separate route-judgment lane that:
+
+- starts from structured state files rather than the main chat narrative;
+- evaluates cold start, route health, risk, and action level;
+- emits a traceable decision record;
+- keeps irreversible actions under human approval.
+
+Do not load it by default for every Studio turn. It is a specialized decision layer, not a replacement for the core Studio stage router.
+
 ## Optional Commands and Hooks
 
 The Studio skill can define command-shaped entry points, but they are optional and must preserve the same gates:

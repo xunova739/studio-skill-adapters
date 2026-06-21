@@ -92,6 +92,7 @@ Chinese prompts are also supported:
 | Path | Purpose |
 |---|---|
 | `SKILL.md` | Canonical Studio skill. Use this as the main public skill entry. |
+| `decision-agent-prompt.md` | Public-safe Decision Agent prompt for isolated, state-file-driven route judgment. |
 | `references/studio-pipeline.md` | Detailed stage rules loaded only when needed. |
 | `.codex/skills/autonomous-studio-codex/` | Codex-specific install form using `AGENTS.md`. |
 | `.claude/skills/autonomous-studio-claude/` | Claude Code-specific install form using `CLAUDE.md`; hooks are optional and reviewed. |
@@ -105,10 +106,13 @@ Chinese prompts are also supported:
 | `skills/excalidraw-diagram-skill/` | Editable Excalidraw diagram helper. |
 | `skills/luban/` | Skill refinement helper. |
 | `docs/workflow.md` | Human-readable workflow explanation. |
+| `docs/source-audit.md` | Source inclusion/exclusion audit for the public-safe bundle. |
 | `examples/prompts.md` | Example trigger prompts. |
 | `examples/status.example.json` | Example status file. |
 | `evals/evals.json` | Root skill eval prompts. |
 | `SECURITY.md` | Public safety boundary. |
+
+`decision-agent-prompt.md` is intentionally a standalone prompt rather than default always-on context. Use it when a Studio implementation needs an isolated decision subagent that reads structured state files, evaluates route health, and returns a traceable decision record without inheriting the main chat narrative.
 
 ## Stage Routing
 

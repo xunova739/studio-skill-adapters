@@ -20,7 +20,7 @@ Config JSON format:
     {
       "name": "用户层",
       "color": "#c2410c",
-      "modules": ["Web 端", "移动端", "钉钉小程序"]
+      "modules": ["Web 端", "移动端", "协作端"]
     },
     {
       "name": "接入层",

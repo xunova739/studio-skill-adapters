@@ -1,6 +1,6 @@
 ---
 name: excalidraw-diagram
-description: 将想法、文档或钉钉表格可视化成 Excalidraw 图表。支持无文档时先聊需求，有文档时直接提炼结构，生成流程图、架构图、思维导图等，输出到统一目录供 Devix 插件自动展示。
+description: 将想法、文档、表格或本地材料可视化成 Excalidraw 图表。支持无材料时先聊需求，有材料时直接提炼结构，生成流程图、架构图、思维导图等，输出到可配置目录。
 triggers:
   - "帮我画"
   - "画一张"
@@ -28,37 +28,24 @@ triggers:
 ## 流程入口
 
 **第零步（每次触发都执行，静默）：**
-```bash
-# 埋点
-python ~/.claude/skills/excalidraw-diagram-skill/scripts/ping_usage.py "excalidraw-diagram" "<图表类型>" &
 
-# 自动安装验证 Hook（幂等，已安装则跳过）
-bash ~/.claude/skills/excalidraw-diagram-skill/hooks/install-hooks.sh 2>/dev/null
-```
+- 不发送埋点，不自动安装 Hook，不默认调用外部系统。
+- 如果项目已经配置了文档/表格读取适配器（例如飞书/Lark CLI、企业文档导出脚本或 MCP），先确认本地凭据可用，再读取内容。
+- 如果没有可用适配器，请用户粘贴内容、上传文件，或先导出为本地文件。
 
 **第一件事：判断有没有内容来源。**
 
 | 情况 | 下一步 |
 |------|------|
-| 用户提供了钉钉文档/表格链接 | → 用本地脚本 `dingtalk/scripts/` 拉取内容，进入**确认环节** |
+| 用户提供了企业文档/表格链接 | → 优先使用项目已配置的读取适配器；没有适配器时请用户导出或粘贴内容，进入**确认环节** |
 | 用户提供了本地文件或直接粘贴了内容 | → 读取内容，进入**确认环节** |
 | 用户只说了一个想法，没有任何文档 | → 进入**需求对话** |
 
-**钉钉内容拉取命令：**
+**可选来源适配器：**
 
-```bash
-# 钉钉文档
-SKILL_DIR=$(dirname $(realpath ~/.claude/skills/excalidraw-diagram-skill/SKILL.md 2>/dev/null || echo ~/.claude/skills/excalidraw-diagram-skill/SKILL.md))
-python "$SKILL_DIR/dingtalk/scripts/dingtalk_doc.py" "<钉钉文档URL>"
-
-# 钉钉电子表格
-python "$SKILL_DIR/dingtalk/scripts/dingtalk_sheet.py" "<表格URL>" "<Sheet名称>"
-
-# 钉钉 AI 表格
-python "$SKILL_DIR/dingtalk/scripts/dingtalk_ai_table.py" "<AI表格URL>"
-```
-
-> **首次使用**：将 `dingtalk/config/servers.json.example` 复制为 `dingtalk/config/servers.json`，填入钉钉 MCP 凭据。
+- 飞书/Lark：优先使用工作区已安装的 `lark-*` CLI/Skill 读取文档、表格或知识库内容。
+- 其他企业文档系统：只使用项目明确配置的适配器；不要把凭据、私有网关或个人路径写进公开 Skill。
+- 读取失败时降级为让用户粘贴正文或提供本地导出文件。
 
 ---
 
@@ -124,7 +111,7 @@ python "$SKILL_DIR/dingtalk/scripts/dingtalk_ai_table.py" "<AI表格URL>"
 | 业务汇报、技术架构、对外展示 | `0` | 精准线条，干净专业 |
 | 头脑风暴、草图、内部讨论 | `1` | 轻微手绘感 |
 | 用户说"手绘"、"草稿"、"随意" | `2` | 明显手绘风格 |
-| 钉钉表格数据驱动 | `0` | 数据图要清晰 |
+| 表格数据驱动 | `0` | 数据图要清晰 |
 
 `fontFamily` 固定用 `3`（简洁无衬线）。`opacity` 固定 `100`，不用透明度做层次。
 
@@ -259,7 +246,7 @@ python "$SKILL_DIR/dingtalk/scripts/dingtalk_ai_table.py" "<AI表格URL>"
   ↓
 [AI 筛选]  ←── 六维评分模型（文字说明评分维度）
   ├── 通过 → [业务审简历]（展示实际审核检查项）
-  └── 拒绝 → 钉钉通知申请人（展示通知模板内容）
+  └── 拒绝 → 通知申请人（展示通知模板内容）
 ```
 每个节点展示"实际长什么样"，不只是叫什么名字。
 
@@ -491,14 +478,7 @@ uv run playwright install chromium
 
 ## 版本备份（防覆盖机制）
 
-Devix Excalidraw 插件已内置外部变更检测和版本备份：
-- 插件每 2 秒检测文件是否被外部修改，如检测到则自动重新加载
-- 插件每次保存时自动备份旧版本到 `.versions/` 目录（间隔 > 30 秒才备份，最多 20 个）
-- 插件顶部有「历史记录」按钮，用户可以浏览和恢复历史版本
-
-### Skill 端规则
-
-尽管插件已有自动备份，Skill **修改已有文件前仍必须主动快照**（插件的自动备份依赖保存间隔，可能跳过关键版本）：
+Skill **修改已有文件前必须主动快照**：
 
 1. **修改前必须快照：** 用 Python 将当前文件复制到 `.versions/{文件名}_{YYYYMMDD}T{HHMMSS}.json`
 2. **新建文件不需要快照**（没有旧版本可保护）
@@ -524,12 +504,12 @@ shutil.copy2(filepath, os.path.join(versions_dir, f'{base}_{ts}.json'))
 
 ---
 
-## 输出路径（Devix 插件联动）
+## 输出路径
 
-生成的文件**必须**保存到：
+生成的文件保存到：
 
 ```
-~/workspace/excalidraw/{项目中文名}/{YYYY-MMDD}-{图名}.excalidraw.json
+${STUDIO_EXCALIDRAW_DIR:-./artifacts/excalidraw}/{项目名}/{YYYY-MMDD}-{图名}.excalidraw.json
 ```
 
 **项目名取法（优先级从高到低）：**
@@ -542,11 +522,11 @@ shutil.copy2(filepath, os.path.join(versions_dir, f'{base}_{ts}.json'))
 
 - **目录不存在时**：`mkdir -p` 自动创建
 - **图名**：用中文，简明描述图的内容（如 `候选人流转流程`、`系统架构全景`）
+- `STUDIO_EXCALIDRAW_DIR` 可由项目自行配置；未配置时使用当前项目内 `artifacts/excalidraw/`。
 - **保存后告知用户**：
 
 ```
-已保存到 ~/workspace/excalidraw/{项目名}/{文件名}
-Devix Excalidraw 插件将在 3 秒内自动刷新显示。
+已保存到 {输出目录}/{项目名}/{文件名}
 ```
 
 ---
